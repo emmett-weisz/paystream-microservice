@@ -20,7 +20,7 @@ var rootCmd = &cobra.Command{
 
 		writer := kafka.NewWriter(kafka.WriterConfig{
 			Brokers:  []string{"localhost:9092"},
-			Topic:    "payments",
+			Topic:    viper.GetString("kafka.topic"),
 			Balancer: &kafka.LeastBytes{},
 		})
 
@@ -39,7 +39,7 @@ func init() {
 	// Load config file with viper
 	viper.SetConfigName("config")
 	viper.SetConfigType("yaml")
-	viper.AddConfigPath(".")
+	viper.AddConfigPath("/Users/emmettweisz/paystream-microservice/config")
 	err := viper.ReadInConfig()
 	if err != nil {
 		log.Printf("No config file found, using defaults: %v", err)
