@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+package payment;
+
+option go_package = "github.com/emmett-weisz/paystream-microservice/proto/paymentpb";
+
+
+// Service definition
+service PaymentVerifier {
+  // gRPC method: verify and emit to Kafka
+  rpc VerifyPayment (PaymentRequest) returns (PaymentResponse);
+}
+
+// Request message
+message PaymentRequest {
+  string payer_id = 1;
+  double amount = 2;
+  string currency = 3;
+  string payment_method = 4;
+}
+
+// Response message
+message PaymentResponse {
+  string status = 1;
+  string message = 2;
+}
