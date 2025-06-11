@@ -38,14 +38,14 @@ A simple Go microservice that exposes a gRPC endpoint to verify payments and pub
 
 1. Clone the repo:
 
-   `git clone https://github.com/yourusername/paystream-microservice.git`
-   `cd paystream-microservice`
+  `git clone https://github.com/yourusername/paystream-microservice.git`
+  `cd paystream-microservice`
 
 2. Start Kafka & Zookeeper using Docker Compose:
 
   `docker-compose up -d` and give it a few seconds to load
 
-3. Create your kafka topic: "verified-payments"
+3. Create your kafka topic: "verified-payments" if you haven't already
 
   `docker exec -it paystream-microservice-kafka-1 kafka-topics.sh \
   --create \
@@ -54,22 +54,22 @@ A simple Go microservice that exposes a gRPC endpoint to verify payments and pub
   --partitions 1 \
   --replication-factor 1`
 
-3. Build and run the gRPC server:
+4. Build and run the gRPC server:
 
   `go run main.go`
 
-4. Test the gRPC endpoint 
+5. Test the gRPC endpoint 
 
-  # Option 1: Using grpcurl
+  ### Option 1: Using grpcurl
 
-  grpcurl -plaintext -d '{
+  `grpcurl -plaintext -d '{
   "payer_id": "emmettweisz",
   "amount": 100.50,
   "currency": "USD",
   "payment_method": "credit_card"
-  }' localhost:50051 payment.PaymentVerifier.VerifyPayment
+  }' localhost:50051 payment.PaymentVerifier.VerifyPayment`
 
-  # Option 2: Using the go client
+  ### Option 2: Using the go client
 
   `go run ./examples/client.go`
 
@@ -92,7 +92,6 @@ A simple Go microservice that exposes a gRPC endpoint to verify payments and pub
   `docker exec -it  <containerId> /bin/bash`
 
   `kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic verified-payments --from-beginning`
-
 
 ## Point of Contact
 
