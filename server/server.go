@@ -28,6 +28,31 @@ func (s *server) VerifyPayment(ctx context.Context, req *paymentpb.PaymentReques
 	log.Printf("Received VerifyPayment request: payer_id=%s, amount=%f %s, method=%s",
 		req.PayerId, req.Amount, req.Currency, req.PaymentMethod)
 
+	if req.PayerId == "" {
+		return &paymentpb.PaymentResponse{
+			Status:  "error",
+			Message: "PayerId cannot be empty",
+		}, nil
+	}
+	if req.Amount <= 0 {
+		return &paymentpb.PaymentResponse{
+			Status:  "error",
+			Message: "Amount must be greater than zero",
+		}, nil
+	}
+	if req.Currency == "" {
+		return &paymentpb.PaymentResponse{
+			Status:  "error",
+			Message: "Currency cannot be empty",
+		}, nil
+	}
+	if req.PaymentMethod != "credit_card" && req.PaymentMethod != "paypal" {
+		return &paymentpb.PaymentResponse{
+			Status:  "error",
+			Message: "Unsupported payment method",
+		}, nil
+	}
+
 	// Send payment message to Kafka
 	err := kafka.SendPaymentMessage(s.kafkaWriter, kafka.PaymentMessage{
 		PayerID:       req.PayerId,
